@@ -1,0 +1,8 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, {{ request.user.username }}! You are logged in as <strong>Admin</strong>.</p>
+{% endblock %}

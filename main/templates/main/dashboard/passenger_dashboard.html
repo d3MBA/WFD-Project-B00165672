@@ -1,0 +1,8 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Passenger Dashboard{% endblock %}
+
+{% block content %}
+<h2>Passenger Dashboard</h2>
+<p>Welcome, {{ request.user.username }}! You are logged in as <strong>Passenger</strong>.</p>
+{% endblock %}
