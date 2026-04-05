@@ -106,6 +106,10 @@ class PurchaseOrderItem(models.Model):
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price
+
     def __str__(self):
         return f"{self.description} for {self.purchase_order.po_number}"
 
