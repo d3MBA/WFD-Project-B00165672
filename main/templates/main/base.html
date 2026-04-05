@@ -17,6 +17,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Dashboard</a>
                     </li>
+                    {% if user.role == 'procurement_manager' or user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'supplier_list' %}">Suppliers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'category_list' %}">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'po_list' %}">Purchase Orders</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <span class="nav-link text-light">Logged in as: {{ user.username }} ({{ user.get_role_display }})</span>
                     </li>
