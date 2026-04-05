@@ -5,4 +5,51 @@
 {% block content %}
 <h2>Procurement Manager Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Procurement Manager</strong>.</p>
+<hr>
+
+<!-- Quick Links -->
+<h4>Quick Links</h4>
+<a href="{% url 'supplier_list' %}" class="btn btn-primary me-2">View Suppliers</a>
+<a href="{% url 'category_list' %}" class="btn btn-primary me-2">View Categories</a>
+<a href="{% url 'po_list' %}" class="btn btn-primary me-2">View Purchase Orders</a>
+<a href="{% url 'po_create' %}" class="btn btn-success me-2">Create New PO</a>
+
+<hr>
+
+<!-- PO Status Overview -->
+<h4>Purchase Order Overview</h4>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ draft_count }}</h5>
+                <p class="card-text">Draft</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ submitted_count }}</h5>
+                <p class="card-text">Submitted</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ approved_count }}</h5>
+                <p class="card-text">Approved</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ received_count }}</h5>
+                <p class="card-text">Received</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
