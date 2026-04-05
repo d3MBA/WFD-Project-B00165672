@@ -1,8 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from .forms import RegistrationForm
+from django.db.models import Sum, F
+from .forms import (
+    RegistrationForm, SupplierForm, CategoryForm,
+    PurchaseOrderForm, PurchaseOrderItemForm
+)
+from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem
 from .decorators import role_required
 
 
@@ -54,6 +59,8 @@ def logout_view(request):
     return redirect('home')
 
 
+# ---- Dashboards ----
+
 @login_required
 @role_required(['admin'])
 def admin_dashboard(request):
@@ -69,7 +76,17 @@ def passenger_dashboard(request):
 @login_required
 @role_required(['procurement_manager'])
 def procurement_dashboard(request):
-    return render(request, 'main/dashboard/procurement_dashboard.html')
+    draft_count = PurchaseOrder.objects.filter(status='draft').count()
+    submitted_count = PurchaseOrder.objects.filter(status='submitted').count()
+    approved_count = PurchaseOrder.objects.filter(status='approved').count()
+    received_count = PurchaseOrder.objects.filter(status='received').count()
+    context = {
+        'draft_count': draft_count,
+        'submitted_count': submitted_count,
+        'approved_count': approved_count,
+        'received_count': received_count,
+    }
+    return render(request, 'main/dashboard/procurement_dashboard.html', context)
 
 
 @login_required
@@ -82,3 +99,210 @@ def flight_manager_dashboard(request):
 @role_required(['ground_crew'])
 def crew_dashboard(request):
     return render(request, 'main/dashboard/crew_dashboard.html')
+
+
+# ---- Helper function ----
+
+def recalculate_po_total(po):
+    total = po.items.aggregate(
+        total=Sum(F('quantity') * F('unit_price'))
+    )['total'] or 0
+    po.total_amount = total
+    po.save()
+
+
+# ---- Supplier CRUD ----
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def supplier_list(request):
+    suppliers = Supplier.objects.all()
+    return render(request, 'main/suppliers/supplier_list.html', {'suppliers': suppliers})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def supplier_create(request):
+    if request.method == 'POST':
+        form = SupplierForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('supplier_list')
+    else:
+        form = SupplierForm()
+    return render(request, 'main/suppliers/supplier_form.html', {'form': form, 'title': 'Add Supplier'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def supplier_edit(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    if request.method == 'POST':
+        form = SupplierForm(request.POST, instance=supplier)
+        if form.is_valid():
+            form.save()
+            return redirect('supplier_list')
+    else:
+        form = SupplierForm(instance=supplier)
+    return render(request, 'main/suppliers/supplier_form.html', {'form': form, 'title': 'Edit Supplier'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def supplier_delete(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    if request.method == 'POST':
+        supplier.delete()
+        return redirect('supplier_list')
+    return render(request, 'main/suppliers/supplier_delete.html', {'supplier': supplier})
+
+
+# ---- Category CRUD ----
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'main/categories/category_list.html', {'categories': categories})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    return render(request, 'main/categories/category_form.html', {'form': form, 'title': 'Add Category'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def category_edit(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, 'main/categories/category_form.html', {'form': form, 'title': 'Edit Category'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        return redirect('category_list')
+    return render(request, 'main/categories/category_delete.html', {'category': category})
+
+
+# ---- Purchase Order CRUD ----
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_list(request):
+    purchase_orders = PurchaseOrder.objects.all().order_by('-created_date')
+    return render(request, 'main/purchase_orders/po_list.html', {'purchase_orders': purchase_orders})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_create(request):
+    if request.method == 'POST':
+        form = PurchaseOrderForm(request.POST)
+        if form.is_valid():
+            po = form.save(commit=False)
+            po.created_by = request.user
+            po.save()
+            return redirect('po_detail', pk=po.pk)
+    else:
+        form = PurchaseOrderForm()
+    return render(request, 'main/purchase_orders/po_form.html', {'form': form, 'title': 'Create Purchase Order'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_detail(request, pk):
+    po = get_object_or_404(PurchaseOrder, pk=pk)
+    items = po.items.all()
+
+    # Handle adding a new item
+    if request.method == 'POST':
+        item_form = PurchaseOrderItemForm(request.POST)
+        if item_form.is_valid():
+            item = item_form.save(commit=False)
+            item.purchase_order = po
+            item.save()
+            recalculate_po_total(po)
+            return redirect('po_detail', pk=po.pk)
+    else:
+        item_form = PurchaseOrderItemForm()
+
+    context = {
+        'po': po,
+        'items': items,
+        'item_form': item_form,
+    }
+    return render(request, 'main/purchase_orders/po_detail.html', context)
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_edit(request, pk):
+    po = get_object_or_404(PurchaseOrder, pk=pk)
+    if request.method == 'POST':
+        form = PurchaseOrderForm(request.POST, instance=po)
+        if form.is_valid():
+            form.save()
+            return redirect('po_detail', pk=po.pk)
+    else:
+        form = PurchaseOrderForm(instance=po)
+    return render(request, 'main/purchase_orders/po_form.html', {'form': form, 'title': 'Edit Purchase Order'})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_delete(request, pk):
+    po = get_object_or_404(PurchaseOrder, pk=pk)
+    if request.method == 'POST':
+        po.delete()
+        return redirect('po_list')
+    return render(request, 'main/purchase_orders/po_delete.html', {'po': po})
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_remove_item(request, item_pk):
+    item = get_object_or_404(PurchaseOrderItem, pk=item_pk)
+    po = item.purchase_order
+    if request.method == 'POST':
+        item.delete()
+        recalculate_po_total(po)
+    return redirect('po_detail', pk=po.pk)
+
+
+@login_required
+@role_required(['admin', 'procurement_manager'])
+def po_change_status(request, pk, new_status):
+    po = get_object_or_404(PurchaseOrder, pk=pk)
+
+    # Only allow valid status transitions
+    valid_transitions = {
+        'draft': 'submitted',
+        'submitted': 'approved',
+        'approved': 'received',
+    }
+
+    if request.method == 'POST':
+        if valid_transitions.get(po.status) == new_status:
+            po.status = new_status
+            po.save()
+
+    return redirect('po_detail', pk=po.pk)
