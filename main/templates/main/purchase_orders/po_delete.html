@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Delete Purchase Order{% endblock %}
+
+{% block content %}
+<h2>Delete Purchase Order</h2>
+<div class="card">
+    <div class="card-body">
+        <p>Are you sure you want to delete purchase order <strong>{{ po.po_number }}</strong>?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'po_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
