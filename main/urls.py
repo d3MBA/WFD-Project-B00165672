@@ -34,4 +34,18 @@ urlpatterns = [
     path('purchase-orders/<int:pk>/delete/', views.po_delete, name='po_delete'),
     path('purchase-orders/<int:pk>/status/<str:new_status>/', views.po_change_status, name='po_change_status'),
     path('purchase-orders/items/<int:item_pk>/remove/', views.po_remove_item, name='po_remove_item'),
+
+    # Aircraft
+    path('aircraft/', views.aircraft_list, name='aircraft_list'),
+    path('aircraft/create/', views.aircraft_create, name='aircraft_create'),
+    path('aircraft/<int:pk>/edit/', views.aircraft_edit, name='aircraft_edit'),
+    path('aircraft/<int:pk>/delete/', views.aircraft_delete, name='aircraft_delete'),
+
+    # Flights
+    path('flights/', views.flight_list, name='flight_list'),
+    path('flights/create/', views.flight_create, name='flight_create'),
+    path('flights/<int:pk>/', views.flight_detail, name='flight_detail'),
+    path('flights/<int:pk>/edit/', views.flight_edit, name='flight_edit'),
+    path('flights/<int:pk>/delete/', views.flight_delete, name='flight_delete'),
+    path('flights/<int:pk>/status/<str:new_status>/', views.flight_change_status, name='flight_change_status'),
 ]
