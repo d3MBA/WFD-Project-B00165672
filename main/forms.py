@@ -59,3 +59,29 @@ class FlightForm(forms.ModelForm):
                 self.initial['departure_time'] = self.instance.departure_time.strftime('%Y-%m-%dT%H:%M')
             if self.instance.arrival_time:
                 self.initial['arrival_time'] = self.instance.arrival_time.strftime('%Y-%m-%dT%H:%M')
+
+
+#search form for finding flights
+class FlightSearchForm(forms.Form):
+    origin = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'From (e.g. Dublin)'})
+    )
+    destination = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'To (e.g. London)'})
+    )
+    date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+
+
+# form for booking seats on a flight
+class BookingForm(forms.Form):
+    num_seats = forms.IntegerField(
+        min_value=1,
+        max_value=10,
+        initial=1,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
