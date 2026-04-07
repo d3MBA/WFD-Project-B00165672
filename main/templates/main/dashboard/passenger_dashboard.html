@@ -5,4 +5,21 @@
 {% block content %}
 <h2>Passenger Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Passenger</strong>.</p>
+
+<!--quick Links -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Quick Links</strong></div>
+    <div class="card-body">
+        <a href="{% url 'flight_search' %}" class="btn btn-primary">Search Flights</a>
+        <a href="{% url 'booking_list' %}" class="btn btn-primary">My Bookings</a>
+    </div>
+</div>
+
+<!-- booking counts -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Your Bookings</strong></div>
+    <div class="card-body">
+        <p>You have {{ confirmed_count }} confirmed bookings and {{ cancelled_count }} cancelled bookings.</p>
+    </div>
+</div>
 {% endblock %}

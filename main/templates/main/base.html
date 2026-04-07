@@ -17,6 +17,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Dashboard</a>
                     </li>
+                    {% if user.role == 'passenger' or user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'flight_search' %}">Search Flights</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'booking_list' %}">My Bookings</a>
+                        </li>
+                    {% endif %}
                     {% if user.role == 'procurement_manager' or user.role == 'admin' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'supplier_list' %}">Suppliers</a>
@@ -47,7 +55,7 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'flight_search' %}">Search Flights</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
