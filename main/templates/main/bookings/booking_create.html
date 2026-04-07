@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Book Flight{% endblock %}
+
+{% block content %}
+<h2>Book Flight</h2>
+
+<!--flight info -->
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Flight:</strong> {{ flight.flight_number }}</p>
+        <p><strong>From:</strong> {{ flight.origin }} <strong>To:</strong> {{ flight.destination }}</p>
+        <p><strong>Departure:</strong> {{ flight.departure_time|date:"d M Y H:i" }}</p>
+        <p><strong>Available Seats:</strong> {{ flight.available_seats }}</p>
+    </div>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<!--booking form -->
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <label>Number of Seats</label>
+            {{ form.num_seats }}
+            <br>
+            <button type="submit" class="btn btn-success mt-2">Confirm Booking</button>
+            <a href="{% url 'flight_search' %}" class="btn btn-secondary mt-2">Back to Search</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - My Bookings{% endblock %}
+
+{% block content %}
+{% if request.user.role == 'admin' %}
+    <h2>All Bookings</h2>
+{% else %}
+    <h2>My Bookings</h2>
+{% endif %}
+
+{% if bookings %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Flight</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Departure</th>
+            <th>Seats</th>
+            <th>Status</th>
+            <th>Booking Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.flight.flight_number }}</td>
+            <td>{{ booking.flight.origin }}</td>
+            <td>{{ booking.flight.destination }}</td>
+            <td>{{ booking.flight.departure_time|date:"d M Y H:i" }}</td>
+            <td>{{ booking.num_seats }}</td>
+            <td>
+                {% if booking.status == 'confirmed' %}
+                    <span class="badge bg-success">Confirmed</span>
+                {% elif booking.status == 'cancelled' %}
+                    <span class="badge bg-danger">Cancelled</span>
+                {% endif %}
+            </td>
+            <td>{{ booking.booking_date|date:"d M Y H:i" }}</td>
+            <td>
+                <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-info btn-sm">View</a>
+                {% if booking.status == 'confirmed' %}
+                    <a href="{% url 'booking_cancel' booking.pk %}" class="btn btn-danger btn-sm">Cancel</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You have no bookings yet. <a href="{% url 'flight_search' %}">Search Flights</a></p>
+{% endif %}
+{% endblock %}
