@@ -28,6 +28,14 @@
                             <a class="nav-link" href="{% url 'po_list' %}">Purchase Orders</a>
                         </li>
                     {% endif %}
+                    {% if user.role == 'flight_manager' or user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'aircraft_list' %}">Aircraft</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'flight_list' %}">Flights</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <span class="nav-link text-light">Logged in as: {{ user.username }} ({{ user.get_role_display }})</span>
                     </li>
