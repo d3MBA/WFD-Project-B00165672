@@ -48,4 +48,11 @@ urlpatterns = [
     path('flights/<int:pk>/edit/', views.flight_edit, name='flight_edit'),
     path('flights/<int:pk>/delete/', views.flight_delete, name='flight_delete'),
     path('flights/<int:pk>/status/<str:new_status>/', views.flight_change_status, name='flight_change_status'),
+
+    # Bookings
+    path('flights/search/', views.flight_search, name='flight_search'),
+    path('bookings/', views.booking_list, name='booking_list'),
+    path('bookings/create/<int:pk>/', views.booking_create, name='booking_create'),
+    path('bookings/<int:pk>/', views.booking_detail, name='booking_detail'),
+    path('bookings/<int:pk>/cancel/', views.booking_cancel, name='booking_cancel'),
 ]
