@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Delete Aircraft{% endblock %}
+
+{% block content %}
+<h2>Delete Aircraft</h2>
+<div class="card">
+    <div class="card-body">
+        <p>Are you sure you want to delete the aircraft <strong>{{ aircraft.registration }} - {{ aircraft.aircraft_type }}</strong>?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'aircraft_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

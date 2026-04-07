@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Aircraft{% endblock %}
+
+{% block content %}
+<h2>Aircraft</h2>
+<a href="{% url 'aircraft_create' %}" class="btn btn-primary mb-3">Add Aircraft</a>
+
+{% if aircraft %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Registration</th>
+            <th>Type</th>
+            <th>Total Seats</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in aircraft %}
+        <tr>
+            <td>{{ a.registration }}</td>
+            <td>{{ a.aircraft_type }}</td>
+            <td>{{ a.total_seats }}</td>
+            <td>
+                {% if a.status == 'active' %}
+                    <span class="badge bg-success">Active</span>
+                {% elif a.status == 'maintenance' %}
+                    <span class="badge bg-warning">Maintenance</span>
+                {% elif a.status == 'retired' %}
+                    <span class="badge bg-secondary">Retired</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'aircraft_edit' a.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'aircraft_delete' a.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No aircraft yet.</p>
+{% endif %}
+{% endblock %}

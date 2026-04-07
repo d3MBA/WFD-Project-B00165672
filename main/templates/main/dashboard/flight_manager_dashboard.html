@@ -5,4 +5,37 @@
 {% block content %}
 <h2>Flight Manager Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Flight Manager</strong>.</p>
+
+<!-- Quick Links -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Quick Links</strong></div>
+    <div class="card-body">
+        <a href="{% url 'aircraft_list' %}" class="btn btn-primary">View Aircraft</a>
+        <a href="{% url 'flight_list' %}" class="btn btn-primary">View Flights</a>
+        <a href="{% url 'aircraft_create' %}" class="btn btn-success">Add New Aircraft</a>
+        <a href="{% url 'flight_create' %}" class="btn btn-success">Add New Flight</a>
+    </div>
+</div>
+
+<!-- Flight counts -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Flights Overview</strong></div>
+    <div class="card-body">
+        <p>Scheduled: {{ scheduled_count }}</p>
+        <p>Boarding: {{ boarding_count }}</p>
+        <p>Departed: {{ departed_count }}</p>
+        <p>Arrived: {{ arrived_count }}</p>
+        <p>Cancelled: {{ cancelled_count }}</p>
+    </div>
+</div>
+
+<!-- Aircraft counts -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Aircraft Overview</strong></div>
+    <div class="card-body">
+        <p>Active: {{ active_aircraft }}</p>
+        <p>Maintenance: {{ maintenance_aircraft }}</p>
+        <p>Retired: {{ retired_aircraft }}</p>
+    </div>
+</div>
 {% endblock %}

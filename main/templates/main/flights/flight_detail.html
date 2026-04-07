@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Flight {{ flight.flight_number }}{% endblock %}
+
+{% block content %}
+<h2>Flight: {{ flight.flight_number }}</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Flight Number:</strong> {{ flight.flight_number }}</p>
+        <p><strong>Origin:</strong> {{ flight.origin }}</p>
+        <p><strong>Destination:</strong> {{ flight.destination }}</p>
+        <p><strong>Departure:</strong> {{ flight.departure_time|date:"d M Y H:i" }}</p>
+        <p><strong>Arrival:</strong> {{ flight.arrival_time|date:"d M Y H:i" }}</p>
+        <p><strong>Aircraft:</strong>
+            {% if flight.aircraft %}
+                {{ flight.aircraft.registration }}
+            {% else %}
+                No aircraft assigned
+            {% endif %}
+        </p>
+        <p><strong>Available Seats:</strong> {{ flight.available_seats }}</p>
+        <p><strong>Status:</strong>
+            {% if flight.status == 'scheduled' %}
+                <span class="badge bg-info">Scheduled</span>
+            {% elif flight.status == 'boarding' %}
+                <span class="badge bg-primary">Boarding</span>
+            {% elif flight.status == 'departed' %}
+                <span class="badge bg-warning">Departed</span>
+            {% elif flight.status == 'arrived' %}
+                <span class="badge bg-success">Arrived</span>
+            {% elif flight.status == 'cancelled' %}
+                <span class="badge bg-danger">Cancelled</span>
+            {% endif %}
+        </p>
+
+        <hr>
+
+        <!-- Status change buttons -->
+        {% if flight.status == 'scheduled' %}
+            <form method="post" action="{% url 'flight_change_status' flight.pk 'boarding' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Start Boarding</button>
+            </form>
+            <form method="post" action="{% url 'flight_change_status' flight.pk 'cancelled' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Cancel Flight</button>
+            </form>
+        {% endif %}
+
+        {% if flight.status == 'boarding' %}
+            <form method="post" action="{% url 'flight_change_status' flight.pk 'departed' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Mark as Departed</button>
+            </form>
+        {% endif %}
+
+        {% if flight.status == 'departed' %}
+            <form method="post" action="{% url 'flight_change_status' flight.pk 'arrived' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Mark as Arrived</button>
+            </form>
+        {% endif %}
+
+        <br><br>
+        <a href="{% url 'flight_edit' flight.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'flight_delete' flight.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'flight_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+{% endblock %}

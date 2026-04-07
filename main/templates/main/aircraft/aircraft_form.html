@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - {{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'aircraft_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
