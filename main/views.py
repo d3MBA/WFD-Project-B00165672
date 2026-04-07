@@ -3,12 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Sum, F
+from django.utils import timezone
 from .forms import (
     RegistrationForm, SupplierForm, CategoryForm,
     PurchaseOrderForm, PurchaseOrderItemForm,
-    AircraftForm, FlightForm
+    AircraftForm, FlightForm,
+    FlightSearchForm, BookingForm
 )
-from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight
+from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight, Booking
 from .decorators import role_required
 
 
@@ -71,7 +73,13 @@ def admin_dashboard(request):
 @login_required
 @role_required(['passenger'])
 def passenger_dashboard(request):
-    return render(request, 'main/dashboard/passenger_dashboard.html')
+    confirmed_count = Booking.objects.filter(passenger=request.user, status='confirmed').count()
+    cancelled_count = Booking.objects.filter(passenger=request.user, status='cancelled').count()
+    context = {
+        'confirmed_count': confirmed_count,
+        'cancelled_count': cancelled_count,
+    }
+    return render(request, 'main/dashboard/passenger_dashboard.html', context)
 
 
 @login_required
@@ -449,3 +457,125 @@ def flight_change_status(request, pk, new_status):
             flight.save()
 
     return redirect('flight_detail', pk=flight.pk)
+
+
+#booking views
+
+# search for available flights (anyone can use this no login needed)
+def flight_search(request):
+    form = FlightSearchForm(request.GET or None)
+    # only show scheduled flights with seats available in the future
+    flights = Flight.objects.filter(
+        status='scheduled',
+        available_seats__gt=0,
+        departure_time__gt=timezone.now()
+    )
+
+    if form.is_valid():
+        origin = form.cleaned_data.get('origin')
+        destination = form.cleaned_data.get('destination')
+        date = form.cleaned_data.get('date')
+        if origin:
+            flights = flights.filter(origin__icontains=origin)
+        if destination:
+            flights = flights.filter(destination__icontains=destination)
+        if date:
+            flights = flights.filter(departure_time__date=date)
+
+    return render(request, 'main/bookings/flight_search.html', {
+        'form': form,
+        'flights': flights,
+    })
+
+
+#book seats on a flight
+@login_required
+@role_required(['passenger', 'admin'])
+def booking_create(request, pk):
+    flight = get_object_or_404(Flight, pk=pk)
+
+    # check if flight can be booked
+    if flight.status != 'scheduled' or flight.available_seats <= 0 or flight.departure_time <= timezone.now():
+        return redirect('flight_search')
+
+    error = None
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            num_seats = form.cleaned_data['num_seats']
+            # check there are enough seats
+            if num_seats > flight.available_seats:
+                error = 'Not enough available seats'
+            else:
+                # create the booking
+                booking = Booking()
+                booking.passenger = request.user
+                booking.flight = flight
+                booking.num_seats = num_seats
+                booking.save()
+                # reduce available seats on the flight
+                flight.available_seats = flight.available_seats - num_seats
+                flight.save()
+                return redirect('booking_detail', pk=booking.pk)
+    else:
+        form = BookingForm()
+
+    return render(request, 'main/bookings/booking_create.html', {
+        'form': form,
+        'flight': flight,
+        'error': error,
+    })
+
+
+#show list of bookings
+@login_required
+@role_required(['passenger', 'admin'])
+def booking_list(request):
+    # admin sees all bookings, passenger sees only their own
+    if request.user.role == 'admin':
+        bookings = Booking.objects.all().order_by('-booking_date')
+    else:
+        bookings = Booking.objects.filter(passenger=request.user).order_by('-booking_date')
+
+    return render(request, 'main/bookings/booking_list.html', {
+        'bookings': bookings,
+    })
+
+
+# show booking details
+@login_required
+@role_required(['passenger', 'admin'])
+def booking_detail(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+
+    # passengers can only see their own bookings
+    if request.user.role == 'passenger' and booking.passenger != request.user:
+        return redirect('booking_list')
+
+    return render(request, 'main/bookings/booking_detail.html', {
+        'booking': booking,
+    })
+
+
+# cancel a booking
+@login_required
+@role_required(['passenger', 'admin'])
+def booking_cancel(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+
+    # passengers can only cancel their own bookings
+    if request.user.role == 'passenger' and booking.passenger != request.user:
+        return redirect('booking_list')
+
+    if request.method == 'POST':
+        # cancel the booking and add seats back
+        booking.status = 'cancelled'
+        booking.save()
+        booking.flight.available_seats = booking.flight.available_seats + booking.num_seats
+        booking.flight.save()
+        return redirect('booking_list')
+
+    return render(request, 'main/bookings/booking_cancel.html', {
+        'booking': booking,
+    })
