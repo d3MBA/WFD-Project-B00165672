@@ -5,9 +5,10 @@ from django.views.decorators.http import require_POST
 from django.db.models import Sum, F
 from .forms import (
     RegistrationForm, SupplierForm, CategoryForm,
-    PurchaseOrderForm, PurchaseOrderItemForm
+    PurchaseOrderForm, PurchaseOrderItemForm,
+    AircraftForm, FlightForm
 )
-from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem
+from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight
 from .decorators import role_required
 
 
@@ -92,7 +93,17 @@ def procurement_dashboard(request):
 @login_required
 @role_required(['flight_manager'])
 def flight_manager_dashboard(request):
-    return render(request, 'main/dashboard/flight_manager_dashboard.html')
+    context = {
+        'scheduled_count': Flight.objects.filter(status='scheduled').count(),
+        'boarding_count': Flight.objects.filter(status='boarding').count(),
+        'departed_count': Flight.objects.filter(status='departed').count(),
+        'arrived_count': Flight.objects.filter(status='arrived').count(),
+        'cancelled_count': Flight.objects.filter(status='cancelled').count(),
+        'active_aircraft': Aircraft.objects.filter(status='active').count(),
+        'maintenance_aircraft': Aircraft.objects.filter(status='maintenance').count(),
+        'retired_aircraft': Aircraft.objects.filter(status='retired').count(),
+    }
+    return render(request, 'main/dashboard/flight_manager_dashboard.html', context)
 
 
 @login_required
@@ -306,3 +317,135 @@ def po_change_status(request, pk, new_status):
             po.save()
 
     return redirect('po_detail', pk=po.pk)
+
+
+# ---- Aircraft CRUD ----
+
+# Show all aircraft in a table
+@login_required
+@role_required(['admin', 'flight_manager'])
+def aircraft_list(request):
+    aircraft = Aircraft.objects.all()
+    return render(request, 'main/aircraft/aircraft_list.html', {'aircraft': aircraft})
+
+
+# Create a new aircraft
+@login_required
+@role_required(['admin', 'flight_manager'])
+def aircraft_create(request):
+    if request.method == 'POST':
+        form = AircraftForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('aircraft_list')
+    else:
+        form = AircraftForm()
+    return render(request, 'main/aircraft/aircraft_form.html', {'form': form, 'title': 'Add Aircraft'})
+
+
+# Edit an existing aircraft
+@login_required
+@role_required(['admin', 'flight_manager'])
+def aircraft_edit(request, pk):
+    aircraft = get_object_or_404(Aircraft, pk=pk)
+    if request.method == 'POST':
+        form = AircraftForm(request.POST, instance=aircraft)
+        if form.is_valid():
+            form.save()
+            return redirect('aircraft_list')
+    else:
+        form = AircraftForm(instance=aircraft)
+    return render(request, 'main/aircraft/aircraft_form.html', {'form': form, 'title': 'Edit Aircraft'})
+
+
+# Delete an aircraft
+@login_required
+@role_required(['admin', 'flight_manager'])
+def aircraft_delete(request, pk):
+    aircraft = get_object_or_404(Aircraft, pk=pk)
+    if request.method == 'POST':
+        aircraft.delete()
+        return redirect('aircraft_list')
+    return render(request, 'main/aircraft/aircraft_delete.html', {'aircraft': aircraft})
+
+
+# ---- Flight CRUD ----
+
+# Show all flights in a table
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_list(request):
+    flights = Flight.objects.all()
+    return render(request, 'main/flights/flight_list.html', {'flights': flights})
+
+
+# Create a new flight
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_create(request):
+    if request.method == 'POST':
+        form = FlightForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('flight_list')
+    else:
+        form = FlightForm()
+    return render(request, 'main/flights/flight_form.html', {'form': form, 'title': 'Add Flight'})
+
+
+# Show details for one flight
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_detail(request, pk):
+    flight = get_object_or_404(Flight, pk=pk)
+    return render(request, 'main/flights/flight_detail.html', {'flight': flight})
+
+
+# Edit a flight
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_edit(request, pk):
+    flight = get_object_or_404(Flight, pk=pk)
+    if request.method == 'POST':
+        form = FlightForm(request.POST, instance=flight)
+        if form.is_valid():
+            form.save()
+            return redirect('flight_detail', pk=flight.pk)
+    else:
+        form = FlightForm(instance=flight)
+    return render(request, 'main/flights/flight_form.html', {'form': form, 'title': 'Edit Flight'})
+
+
+# Delete a flight
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_delete(request, pk):
+    flight = get_object_or_404(Flight, pk=pk)
+    if request.method == 'POST':
+        flight.delete()
+        return redirect('flight_list')
+    return render(request, 'main/flights/flight_delete.html', {'flight': flight})
+
+
+# Change flight status
+@login_required
+@role_required(['admin', 'flight_manager'])
+def flight_change_status(request, pk, new_status):
+    flight = get_object_or_404(Flight, pk=pk)
+
+    if request.method == 'POST':
+        # only allow valid transitions
+        if flight.status == 'scheduled' and new_status == 'boarding':
+            flight.status = 'boarding'
+            flight.save()
+        elif flight.status == 'scheduled' and new_status == 'cancelled':
+            flight.status = 'cancelled'
+            flight.save()
+        elif flight.status == 'boarding' and new_status == 'departed':
+            flight.status = 'departed'
+            flight.save()
+        elif flight.status == 'departed' and new_status == 'arrived':
+            flight.status = 'arrived'
+            flight.save()
+
+    return redirect('flight_detail', pk=flight.pk)
