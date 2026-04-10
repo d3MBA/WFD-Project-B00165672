@@ -43,6 +43,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'flight_list' %}">Flights</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'assignment_list' %}">Crew Assignments</a>
+                        </li>
+                    {% endif %}
+                    {% if user.role == 'ground_crew' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_assignments' %}">My Assignments</a>
+                        </li>
                     {% endif %}
                     <li class="nav-item">
                         <span class="nav-link text-light">Logged in as: {{ user.username }} ({{ user.get_role_display }})</span>
