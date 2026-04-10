@@ -6,36 +6,98 @@
 <h2>Flight Manager Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Flight Manager</strong>.</p>
 
-<!-- Quick Links -->
+<!-- quick links -->
 <div class="card mb-3">
     <div class="card-header"><strong>Quick Links</strong></div>
     <div class="card-body">
         <a href="{% url 'aircraft_list' %}" class="btn btn-primary">View Aircraft</a>
         <a href="{% url 'flight_list' %}" class="btn btn-primary">View Flights</a>
+        <a href="{% url 'assignment_list' %}" class="btn btn-primary">Crew Assignments</a>
         <a href="{% url 'aircraft_create' %}" class="btn btn-success">Add New Aircraft</a>
         <a href="{% url 'flight_create' %}" class="btn btn-success">Add New Flight</a>
+        <a href="{% url 'assignment_create' %}" class="btn btn-success">Add Assignment</a>
     </div>
 </div>
 
-<!-- Flight counts -->
-<div class="card mb-3">
-    <div class="card-header"><strong>Flights Overview</strong></div>
-    <div class="card-body">
-        <p>Scheduled: {{ scheduled_count }}</p>
-        <p>Boarding: {{ boarding_count }}</p>
-        <p>Departed: {{ departed_count }}</p>
-        <p>Arrived: {{ arrived_count }}</p>
-        <p>Cancelled: {{ cancelled_count }}</p>
+<!-- flight counts -->
+<h4>Flights Overview</h4>
+<div class="row mb-3">
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h3>{{ scheduled_count }}</h3>
+                <p>Scheduled</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h3>{{ boarding_count }}</h3>
+                <p>Boarding</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h3>{{ departed_count }}</h3>
+                <p>Departed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h3>{{ arrived_count }}</h3>
+                <p>Arrived</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body text-center">
+                <h3>{{ cancelled_count }}</h3>
+                <p>Cancelled</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-dark">
+            <div class="card-body text-center">
+                <h3>{{ total_assignments }}</h3>
+                <p>Crew Assignments</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Aircraft counts -->
-<div class="card mb-3">
-    <div class="card-header"><strong>Aircraft Overview</strong></div>
-    <div class="card-body">
-        <p>Active: {{ active_aircraft }}</p>
-        <p>Maintenance: {{ maintenance_aircraft }}</p>
-        <p>Retired: {{ retired_aircraft }}</p>
+<!-- aircraft counts -->
+<h4>Aircraft Overview</h4>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h3>{{ active_aircraft }}</h3>
+                <p>Active</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h3>{{ maintenance_aircraft }}</h3>
+                <p>Maintenance</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body text-center">
+                <h3>{{ retired_aircraft }}</h3>
+                <p>Retired</p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@
 <h2>Passenger Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Passenger</strong>.</p>
 
-<!--quick Links -->
+<!-- quick links -->
 <div class="card mb-3">
     <div class="card-header"><strong>Quick Links</strong></div>
     <div class="card-body">
@@ -20,6 +20,22 @@
     <div class="card-header"><strong>Your Bookings</strong></div>
     <div class="card-body">
         <p>You have {{ confirmed_count }} confirmed bookings and {{ cancelled_count }} cancelled bookings.</p>
+    </div>
+</div>
+
+<!-- next upcoming flight -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Next Upcoming Flight</strong></div>
+    <div class="card-body">
+        {% if next_booking %}
+            <p><strong>Flight:</strong> {{ next_booking.flight.flight_number }}</p>
+            <p><strong>From:</strong> {{ next_booking.flight.origin }} <strong>To:</strong> {{ next_booking.flight.destination }}</p>
+            <p><strong>Departure:</strong> {{ next_booking.flight.departure_time|date:"d M Y H:i" }}</p>
+            <p><strong>Seats:</strong> {{ next_booking.num_seats }}</p>
+            <a href="{% url 'booking_detail' next_booking.pk %}" class="btn btn-info btn-sm">View Booking</a>
+        {% else %}
+            <p>No upcoming flights. <a href="{% url 'flight_search' %}">Search for flights</a></p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

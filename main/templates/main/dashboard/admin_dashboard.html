@@ -5,4 +5,71 @@
 {% block content %}
 <h2>Admin Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Admin</strong>.</p>
+
+<!-- stats cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h3>{{ total_users }}</h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h3>{{ total_flights }}</h3>
+                <p>Total Flights</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h3>{{ total_bookings }}</h3>
+                <p>Total Bookings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h3>{{ total_pos }}</h3>
+                <p>Purchase Orders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body text-center">
+                <h3>{{ total_aircraft }}</h3>
+                <p>Total Aircraft</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-dark">
+            <div class="card-body text-center">
+                <h3>{{ total_assignments }}</h3>
+                <p>Crew Assignments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- quick links -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Quick Links</strong></div>
+    <div class="card-body">
+        <a href="{% url 'flight_search' %}" class="btn btn-primary">Search Flights</a>
+        <a href="{% url 'booking_list' %}" class="btn btn-primary">All Bookings</a>
+        <a href="{% url 'supplier_list' %}" class="btn btn-primary">Suppliers</a>
+        <a href="{% url 'category_list' %}" class="btn btn-primary">Categories</a>
+        <a href="{% url 'po_list' %}" class="btn btn-primary">Purchase Orders</a>
+        <a href="{% url 'aircraft_list' %}" class="btn btn-primary">Aircraft</a>
+        <a href="{% url 'flight_list' %}" class="btn btn-primary">Flights</a>
+        <a href="{% url 'assignment_list' %}" class="btn btn-primary">Crew Assignments</a>
+    </div>
+</div>
 {% endblock %}

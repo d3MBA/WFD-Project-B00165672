@@ -5,49 +5,50 @@
 {% block content %}
 <h2>Procurement Manager Dashboard</h2>
 <p>Welcome, {{ request.user.username }}! You are logged in as <strong>Procurement Manager</strong>.</p>
-<hr>
 
-<!-- Quick Links -->
-<h4>Quick Links</h4>
-<a href="{% url 'supplier_list' %}" class="btn btn-primary me-2">View Suppliers</a>
-<a href="{% url 'category_list' %}" class="btn btn-primary me-2">View Categories</a>
-<a href="{% url 'po_list' %}" class="btn btn-primary me-2">View Purchase Orders</a>
-<a href="{% url 'po_create' %}" class="btn btn-success me-2">Create New PO</a>
+<!-- quick links -->
+<div class="card mb-3">
+    <div class="card-header"><strong>Quick Links</strong></div>
+    <div class="card-body">
+        <a href="{% url 'supplier_list' %}" class="btn btn-primary">View Suppliers</a>
+        <a href="{% url 'category_list' %}" class="btn btn-primary">View Categories</a>
+        <a href="{% url 'po_list' %}" class="btn btn-primary">View Purchase Orders</a>
+        <a href="{% url 'po_create' %}" class="btn btn-success">Create New PO</a>
+    </div>
+</div>
 
-<hr>
-
-<!-- PO Status Overview -->
+<!-- PO status overview -->
 <h4>Purchase Order Overview</h4>
 <div class="row">
-    <div class="col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">{{ draft_count }}</h5>
-                <p class="card-text">Draft</p>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body text-center">
+                <h3>{{ draft_count }}</h3>
+                <p>Draft</p>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">{{ submitted_count }}</h5>
-                <p class="card-text">Submitted</p>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h3>{{ submitted_count }}</h3>
+                <p>Submitted</p>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">{{ approved_count }}</h5>
-                <p class="card-text">Approved</p>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h3>{{ approved_count }}</h3>
+                <p>Approved</p>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">{{ received_count }}</h5>
-                <p class="card-text">Received</p>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h3>{{ received_count }}</h3>
+                <p>Received</p>
             </div>
         </div>
     </div>
