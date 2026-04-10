@@ -55,4 +55,14 @@ urlpatterns = [
     path('bookings/create/<int:pk>/', views.booking_create, name='booking_create'),
     path('bookings/<int:pk>/', views.booking_detail, name='booking_detail'),
     path('bookings/<int:pk>/cancel/', views.booking_cancel, name='booking_cancel'),
+
+    # Crew Assignments (flight manager)
+    path('assignments/', views.assignment_list, name='assignment_list'),
+    path('assignments/create/', views.assignment_create, name='assignment_create'),
+    path('assignments/<int:pk>/edit/', views.assignment_edit, name='assignment_edit'),
+    path('assignments/<int:pk>/delete/', views.assignment_delete, name='assignment_delete'),
+
+    # My Assignments (ground crew)
+    path('my-assignments/', views.my_assignments, name='my_assignments'),
+    path('my-assignments/<int:pk>/status/<str:new_status>/', views.my_assignment_update_status, name='my_assignment_update_status'),
 ]
