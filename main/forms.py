@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight
+from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight, CrewAssignment
 
 User = get_user_model()
 
@@ -85,3 +85,17 @@ class BookingForm(forms.Form):
         initial=1,
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
+
+
+# form for assigning crew to flights
+class CrewAssignmentForm(forms.ModelForm):
+    class Meta:
+        model = CrewAssignment
+        fields = ['crew_member', 'flight', 'task', 'status']
+
+    def __init__(self, *args, **kwargs):
+        super(CrewAssignmentForm, self).__init__(*args, **kwargs)
+        # only show ground crew users in the dropdown
+        self.fields['crew_member'].queryset = get_user_model().objects.filter(role='ground_crew')
+        # only show scheduled or boarding flights
+        self.fields['flight'].queryset = Flight.objects.filter(status__in=['scheduled', 'boarding'])
