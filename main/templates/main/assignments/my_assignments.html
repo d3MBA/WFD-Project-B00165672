@@ -1,0 +1,60 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - My Assignments{% endblock %}
+
+{% block content %}
+<h2>My Assignments</h2>
+
+{% if assignments %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Flight</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Departure</th>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in assignments %}
+        <tr>
+            <td>{{ a.flight.flight_number }}</td>
+            <td>{{ a.flight.origin }}</td>
+            <td>{{ a.flight.destination }}</td>
+            <td>{{ a.flight.departure_time|date:"d M Y H:i" }}</td>
+            <td>{{ a.task }}</td>
+            <td>
+                {% if a.status == 'assigned' %}
+                    <span class="badge bg-info">Assigned</span>
+                {% elif a.status == 'in_progress' %}
+                    <span class="badge bg-warning">In Progress</span>
+                {% elif a.status == 'completed' %}
+                    <span class="badge bg-success">Completed</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if a.status == 'assigned' %}
+                    <form method="post" action="{% url 'my_assignment_update_status' a.pk 'in_progress' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-sm">Start</button>
+                    </form>
+                {% elif a.status == 'in_progress' %}
+                    <form method="post" action="{% url 'my_assignment_update_status' a.pk 'completed' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                    </form>
+                {% else %}
+                    <span class="text-muted">Done</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You have no assignments yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Crew Assignments{% endblock %}
+
+{% block content %}
+<h2>Crew Assignments</h2>
+<a href="{% url 'assignment_create' %}" class="btn btn-primary mb-3">Add Assignment</a>
+
+{% if assignments %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Crew Member</th>
+            <th>Flight</th>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Assigned Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in assignments %}
+        <tr>
+            <td>{{ a.crew_member.username }}</td>
+            <td>{{ a.flight.flight_number }}</td>
+            <td>{{ a.task }}</td>
+            <td>
+                {% if a.status == 'assigned' %}
+                    <span class="badge bg-info">Assigned</span>
+                {% elif a.status == 'in_progress' %}
+                    <span class="badge bg-warning">In Progress</span>
+                {% elif a.status == 'completed' %}
+                    <span class="badge bg-success">Completed</span>
+                {% endif %}
+            </td>
+            <td>{{ a.assigned_date|date:"d M Y H:i" }}</td>
+            <td>
+                <a href="{% url 'assignment_edit' a.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'assignment_delete' a.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No crew assignments yet.</p>
+{% endif %}
+{% endblock %}

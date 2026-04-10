@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block title %}SkyBoard - Delete Assignment{% endblock %}
+
+{% block content %}
+<h2>Delete Assignment</h2>
+<div class="card">
+    <div class="card-body">
+        <p>Are you sure you want to delete the assignment for
+            <strong>{{ assignment.crew_member.username }}</strong> on flight
+            <strong>{{ assignment.flight.flight_number }}</strong>?
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'assignment_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
