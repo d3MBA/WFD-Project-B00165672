@@ -4,13 +4,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models import Sum, F
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from .forms import (
     RegistrationForm, SupplierForm, CategoryForm,
     PurchaseOrderForm, PurchaseOrderItemForm,
     AircraftForm, FlightForm,
-    FlightSearchForm, BookingForm
+    FlightSearchForm, BookingForm,
+    CrewAssignmentForm
 )
-from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight, Booking
+from .models import Supplier, Category, PurchaseOrder, PurchaseOrderItem, Aircraft, Flight, Booking, CrewAssignment
+
+User = get_user_model()
 from .decorators import role_required
 
 
@@ -67,7 +71,19 @@ def logout_view(request):
 @login_required
 @role_required(['admin'])
 def admin_dashboard(request):
-    return render(request, 'main/dashboard/admin_dashboard.html')
+    context = {
+        'total_users': User.objects.count(),
+        'total_passengers': User.objects.filter(role='passenger').count(),
+        'total_flights': Flight.objects.count(),
+        'scheduled_flights': Flight.objects.filter(status='scheduled').count(),
+        'total_bookings': Booking.objects.count(),
+        'confirmed_bookings': Booking.objects.filter(status='confirmed').count(),
+        'total_pos': PurchaseOrder.objects.count(),
+        'total_aircraft': Aircraft.objects.count(),
+        'active_aircraft': Aircraft.objects.filter(status='active').count(),
+        'total_assignments': CrewAssignment.objects.count(),
+    }
+    return render(request, 'main/dashboard/admin_dashboard.html', context)
 
 
 @login_required
@@ -75,9 +91,16 @@ def admin_dashboard(request):
 def passenger_dashboard(request):
     confirmed_count = Booking.objects.filter(passenger=request.user, status='confirmed').count()
     cancelled_count = Booking.objects.filter(passenger=request.user, status='cancelled').count()
+    # get the next upcoming flight for this passenger
+    next_booking = Booking.objects.filter(
+        passenger=request.user,
+        status='confirmed',
+        flight__departure_time__gt=timezone.now()
+    ).order_by('flight__departure_time').first()
     context = {
         'confirmed_count': confirmed_count,
         'cancelled_count': cancelled_count,
+        'next_booking': next_booking,
     }
     return render(request, 'main/dashboard/passenger_dashboard.html', context)
 
@@ -110,6 +133,7 @@ def flight_manager_dashboard(request):
         'active_aircraft': Aircraft.objects.filter(status='active').count(),
         'maintenance_aircraft': Aircraft.objects.filter(status='maintenance').count(),
         'retired_aircraft': Aircraft.objects.filter(status='retired').count(),
+        'total_assignments': CrewAssignment.objects.count(),
     }
     return render(request, 'main/dashboard/flight_manager_dashboard.html', context)
 
@@ -117,7 +141,17 @@ def flight_manager_dashboard(request):
 @login_required
 @role_required(['ground_crew'])
 def crew_dashboard(request):
-    return render(request, 'main/dashboard/crew_dashboard.html')
+    my_assignments = CrewAssignment.objects.filter(crew_member=request.user)
+    context = {
+        'assigned_count': my_assignments.filter(status='assigned').count(),
+        'in_progress_count': my_assignments.filter(status='in_progress').count(),
+        'completed_count': my_assignments.filter(status='completed').count(),
+        'upcoming': my_assignments.filter(
+            status__in=['assigned', 'in_progress'],
+            flight__departure_time__gt=timezone.now()
+        ).order_by('flight__departure_time')[:5],
+    }
+    return render(request, 'main/dashboard/crew_dashboard.html', context)
 
 
 # ---- Helper function ----
@@ -579,3 +613,85 @@ def booking_cancel(request, pk):
     return render(request, 'main/bookings/booking_cancel.html', {
         'booking': booking,
     })
+
+
+# ---- Crew Assignment CRUD (for flight managers) ----
+
+# show all crew assignments
+@login_required
+@role_required(['admin', 'flight_manager'])
+def assignment_list(request):
+    assignments = CrewAssignment.objects.all().order_by('-assigned_date')
+    return render(request, 'main/assignments/assignment_list.html', {'assignments': assignments})
+
+
+# create a new crew assignment
+@login_required
+@role_required(['admin', 'flight_manager'])
+def assignment_create(request):
+    if request.method == 'POST':
+        form = CrewAssignmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('assignment_list')
+    else:
+        form = CrewAssignmentForm()
+    return render(request, 'main/assignments/assignment_form.html', {'form': form, 'title': 'Add Assignment'})
+
+
+# edit a crew assignment
+@login_required
+@role_required(['admin', 'flight_manager'])
+def assignment_edit(request, pk):
+    assignment = get_object_or_404(CrewAssignment, pk=pk)
+    if request.method == 'POST':
+        form = CrewAssignmentForm(request.POST, instance=assignment)
+        if form.is_valid():
+            form.save()
+            return redirect('assignment_list')
+    else:
+        form = CrewAssignmentForm(instance=assignment)
+    return render(request, 'main/assignments/assignment_form.html', {'form': form, 'title': 'Edit Assignment'})
+
+
+# delete a crew assignment
+@login_required
+@role_required(['admin', 'flight_manager'])
+def assignment_delete(request, pk):
+    assignment = get_object_or_404(CrewAssignment, pk=pk)
+    if request.method == 'POST':
+        assignment.delete()
+        return redirect('assignment_list')
+    return render(request, 'main/assignments/assignment_delete.html', {'assignment': assignment})
+
+
+# ---- My Assignments (for ground crew) ----
+
+# show my assignments
+@login_required
+@role_required(['ground_crew'])
+def my_assignments(request):
+    assignments = CrewAssignment.objects.filter(crew_member=request.user).order_by('-assigned_date')
+    return render(request, 'main/assignments/my_assignments.html', {'assignments': assignments})
+
+
+# update assignment status (ground crew can update their own)
+@login_required
+@role_required(['ground_crew'])
+def my_assignment_update_status(request, pk, new_status):
+    assignment = get_object_or_404(CrewAssignment, pk=pk)
+
+    # make sure it belongs to this user
+    if assignment.crew_member != request.user:
+        return redirect('my_assignments')
+
+    if request.method == 'POST':
+        # only allow valid transitions
+        if assignment.status == 'assigned' and new_status == 'in_progress':
+            assignment.status = 'in_progress'
+            assignment.save()
+        elif assignment.status == 'in_progress' and new_status == 'completed':
+            assignment.status = 'completed'
+            assignment.save()
+
+    return redirect('my_assignments')
