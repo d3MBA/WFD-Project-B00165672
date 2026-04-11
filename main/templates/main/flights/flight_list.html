@@ -7,7 +7,7 @@
 <a href="{% url 'flight_create' %}" class="btn btn-primary mb-3">Add Flight</a>
 
 {% if flights %}
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Flight Number</th>
@@ -39,13 +39,13 @@
             <td>{{ flight.available_seats }}</td>
             <td>
                 {% if flight.status == 'scheduled' %}
-                    <span class="badge bg-info">Scheduled</span>
+                    <span class="badge bg-primary">Scheduled</span>
                 {% elif flight.status == 'boarding' %}
                     <span class="badge bg-primary">Boarding</span>
                 {% elif flight.status == 'departed' %}
                     <span class="badge bg-warning">Departed</span>
                 {% elif flight.status == 'arrived' %}
-                    <span class="badge bg-success">Arrived</span>
+                    <span class="badge bg-info">Arrived</span>
                 {% elif flight.status == 'cancelled' %}
                     <span class="badge bg-danger">Cancelled</span>
                 {% endif %}

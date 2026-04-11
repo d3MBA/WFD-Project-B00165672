@@ -46,7 +46,7 @@
 <!-- upcoming assignments -->
 <h4>Upcoming Assignments</h4>
 {% if upcoming %}
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Flight</th>
@@ -67,9 +67,9 @@
             <td>{{ a.task }}</td>
             <td>
                 {% if a.status == 'assigned' %}
-                    <span class="badge bg-info">Assigned</span>
+                    <span class="badge bg-secondary">Assigned</span>
                 {% elif a.status == 'in_progress' %}
-                    <span class="badge bg-warning">In Progress</span>
+                    <span class="badge bg-primary">In Progress</span>
                 {% endif %}
             </td>
         </tr>

@@ -22,13 +22,13 @@
         <p><strong>Available Seats:</strong> {{ flight.available_seats }}</p>
         <p><strong>Status:</strong>
             {% if flight.status == 'scheduled' %}
-                <span class="badge bg-info">Scheduled</span>
+                <span class="badge bg-primary">Scheduled</span>
             {% elif flight.status == 'boarding' %}
                 <span class="badge bg-primary">Boarding</span>
             {% elif flight.status == 'departed' %}
                 <span class="badge bg-warning">Departed</span>
             {% elif flight.status == 'arrived' %}
-                <span class="badge bg-success">Arrived</span>
+                <span class="badge bg-info">Arrived</span>
             {% elif flight.status == 'cancelled' %}
                 <span class="badge bg-danger">Cancelled</span>
             {% endif %}

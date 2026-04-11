@@ -7,7 +7,7 @@
 <a href="{% url 'aircraft_create' %}" class="btn btn-primary mb-3">Add Aircraft</a>
 
 {% if aircraft %}
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Registration</th>
@@ -29,7 +29,7 @@
                 {% elif a.status == 'maintenance' %}
                     <span class="badge bg-warning">Maintenance</span>
                 {% elif a.status == 'retired' %}
-                    <span class="badge bg-secondary">Retired</span>
+                    <span class="badge bg-danger">Retired</span>
                 {% endif %}
             </td>
             <td>
