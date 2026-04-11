@@ -59,7 +59,7 @@
 <!-- Items Table -->
 <h4>Items</h4>
 {% if items %}
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Description</th>
@@ -103,6 +103,15 @@
 <h4>Add Item</h4>
 <div class="card">
     <div class="card-body">
+        {% if item_form.errors %}
+        <div class="alert alert-danger">
+            {% for field, errors in item_form.errors.items %}
+                {% for error in errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             {{ item_form.as_p }}
