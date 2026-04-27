@@ -9,6 +9,9 @@ Student: B00165672
 
 python manage.py test main
 
+python3 manage.py flush --no-input
+python3 manage.py loaddata users aircraft suppliers categories flights purchase_orders purchase_order_items bookings crew_assignments
+
 ## Features
 
 - 5 user roles with role based access
@@ -18,3 +21,4 @@ python manage.py test main
 - Ground crew task assignments
 - Role specific dashboards with stats
 - File upload for aircraft images
+
