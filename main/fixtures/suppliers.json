@@ -1,0 +1,32 @@
+[
+    {
+        "model": "main.supplier",
+        "pk": 1,
+        "fields": {
+            "name": "AeroParts Ltd",
+            "contact_email": "sales@aeroparts.com",
+            "phone": "01234567890",
+            "address": "Unit 5, Dublin Airport Business Park"
+        }
+    },
+    {
+        "model": "main.supplier",
+        "pk": 2,
+        "fields": {
+            "name": "JetFuel Supplies Co.",
+            "contact_email": "orders@jetfuel.ie",
+            "phone": "09876543210",
+            "address": "Hangar Road, Shannon"
+        }
+    },
+    {
+        "model": "main.supplier",
+        "pk": 3,
+        "fields": {
+            "name": "SkyClean Services",
+            "contact_email": "info@skyclean.com",
+            "phone": "01onal55667788",
+            "address": "12 Airport Way, Cork"
+        }
+    }
+]

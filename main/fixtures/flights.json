@@ -1,0 +1,72 @@
+[
+    {
+        "model": "main.flight",
+        "pk": 1,
+        "fields": {
+            "flight_number": "SK101",
+            "aircraft": 1,
+            "origin": "Dublin",
+            "destination": "London",
+            "departure_time": "2026-06-15T08:00:00Z",
+            "arrival_time": "2026-06-15T09:30:00Z",
+            "available_seats": 150,
+            "status": "scheduled"
+        }
+    },
+    {
+        "model": "main.flight",
+        "pk": 2,
+        "fields": {
+            "flight_number": "SK202",
+            "aircraft": 2,
+            "origin": "Dublin",
+            "destination": "Paris",
+            "departure_time": "2026-06-16T10:00:00Z",
+            "arrival_time": "2026-06-16T12:30:00Z",
+            "available_seats": 120,
+            "status": "scheduled"
+        }
+    },
+    {
+        "model": "main.flight",
+        "pk": 3,
+        "fields": {
+            "flight_number": "SK303",
+            "aircraft": 1,
+            "origin": "London",
+            "destination": "New York",
+            "departure_time": "2026-06-17T14:00:00Z",
+            "arrival_time": "2026-06-17T22:00:00Z",
+            "available_seats": 180,
+            "status": "boarding"
+        }
+    },
+    {
+        "model": "main.flight",
+        "pk": 4,
+        "fields": {
+            "flight_number": "SK404",
+            "aircraft": 2,
+            "origin": "Paris",
+            "destination": "Amsterdam",
+            "departure_time": "2026-06-18T06:00:00Z",
+            "arrival_time": "2026-06-18T07:30:00Z",
+            "available_seats": 90,
+            "status": "departed"
+        }
+    },
+    {
+        "model": "main.flight",
+        "pk": 5,
+        "fields": {
+            "flight_number": "SK505",
+            "aircraft": 1,
+            "origin": "Amsterdam",
+            "destination": "Dublin",
+            "departure_time": "2026-06-20T16:00:00Z",
+            "arrival_time": "2026-06-20T18:00:00Z",
+            "available_seats": 0,
+            "status": "cancelled"
+        }
+    }
+]

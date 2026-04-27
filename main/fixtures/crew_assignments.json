@@ -1,0 +1,46 @@
+[
+    {
+        "model": "main.crewassignment",
+        "pk": 1,
+        "fields": {
+            "crew_member": 8,
+            "flight": 1,
+            "task": "Baggage Loading",
+            "status": "assigned",
+            "assigned_date": "2026-04-09T08:00:00Z"
+        }
+    },
+    {
+        "model": "main.crewassignment",
+        "pk": 2,
+        "fields": {
+            "crew_member": 9,
+            "flight": 1,
+            "task": "Refuelling",
+            "status": "in_progress",
+            "assigned_date": "2026-04-09T08:30:00Z"
+        }
+    },
+    {
+        "model": "main.crewassignment",
+        "pk": 3,
+        "fields": {
+            "crew_member": 8,
+            "flight": 2,
+            "task": "Cabin Cleaning",
+            "status": "completed",
+            "assigned_date": "2026-04-10T07:00:00Z"
+        }
+    },
+    {
+        "model": "main.crewassignment",
+        "pk": 4,
+        "fields": {
+            "crew_member": 9,
+            "flight": 3,
+            "task": "Safety Check",
+            "status": "assigned",
+            "assigned_date": "2026-04-11T10:00:00Z"
+        }
+    }
+]

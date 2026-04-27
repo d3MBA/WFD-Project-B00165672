@@ -27,6 +27,7 @@ class Aircraft(models.Model):
     registration = models.CharField(max_length=20, unique=True)
     aircraft_type = models.CharField(max_length=100)
     total_seats = models.IntegerField()
+    image = models.ImageField(upload_to='aircraft_images/', blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
 
     def __str__(self):

@@ -1,0 +1,46 @@
+[
+    {
+        "model": "main.booking",
+        "pk": 1,
+        "fields": {
+            "passenger": 2,
+            "flight": 1,
+            "num_seats": 2,
+            "booking_date": "2026-04-10T12:00:00Z",
+            "status": "confirmed"
+        }
+    },
+    {
+        "model": "main.booking",
+        "pk": 2,
+        "fields": {
+            "passenger": 3,
+            "flight": 1,
+            "num_seats": 1,
+            "booking_date": "2026-04-10T15:00:00Z",
+            "status": "confirmed"
+        }
+    },
+    {
+        "model": "main.booking",
+        "pk": 3,
+        "fields": {
+            "passenger": 2,
+            "flight": 2,
+            "num_seats": 3,
+            "booking_date": "2026-04-11T09:00:00Z",
+            "status": "cancelled"
+        }
+    },
+    {
+        "model": "main.booking",
+        "pk": 4,
+        "fields": {
+            "passenger": 10,
+            "flight": 2,
+            "num_seats": 1,
+            "booking_date": "2026-04-12T11:00:00Z",
+            "status": "confirmed"
+        }
+    }
+]

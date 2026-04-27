@@ -1,0 +1,68 @@
+[
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 1,
+        "fields": {
+            "purchase_order": 1,
+            "category": 1,
+            "description": "Turbine blades set",
+            "quantity": 2,
+            "unit_price": "500.00"
+        }
+    },
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 2,
+        "fields": {
+            "purchase_order": 1,
+            "category": 1,
+            "description": "Oil filters",
+            "quantity": 10,
+            "unit_price": "50.00"
+        }
+    },
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 3,
+        "fields": {
+            "purchase_order": 2,
+            "category": 2,
+            "description": "Blankets pack of 100",
+            "quantity": 5,
+            "unit_price": "200.00"
+        }
+    },
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 4,
+        "fields": {
+            "purchase_order": 2,
+            "category": 2,
+            "description": "Headphone sets",
+            "quantity": 200,
+            "unit_price": "11.00"
+        }
+    },
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 5,
+        "fields": {
+            "purchase_order": 3,
+            "category": 4,
+            "description": "Aircraft cleaning solution 5L",
+            "quantity": 20,
+            "unit_price": "25.00"
+        }
+    },
+    {
+        "model": "main.purchaseorderitem",
+        "pk": 6,
+        "fields": {
+            "purchase_order": 3,
+            "category": 3,
+            "description": "Life vests",
+            "quantity": 50,
+            "unit_price": "6.00"
+        }
+    }
+]

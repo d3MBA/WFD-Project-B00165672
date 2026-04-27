@@ -1,0 +1,132 @@
+[
+    {
+        "model": "main.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "email": "admin@admin.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "admin",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 2,
+        "fields": {
+            "username": "user1",
+            "email": "user1@user1.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "passenger",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 3,
+        "fields": {
+            "username": "user2",
+            "email": "user2@user2.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "passenger",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 4,
+        "fields": {
+            "username": "procurement1",
+            "email": "procurement1@procurement1.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "procurement_manager",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 5,
+        "fields": {
+            "username": "procurement2",
+            "email": "procurement2@procurement2.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "procurement_manager",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 6,
+        "fields": {
+            "username": "flightmanager1",
+            "email": "flightmanager1@flightmanager1.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "flight_manager",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 7,
+        "fields": {
+            "username": "flightmanager2",
+            "email": "flightmanager2@flightmanager2.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "flight_manager",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 8,
+        "fields": {
+            "username": "groundcrew1",
+            "email": "groundcrew1@groundcrew1.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "ground_crew",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 9,
+        "fields": {
+            "username": "groundcrew2",
+            "email": "groundcrew2@groundcrew2.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "ground_crew",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 10,
+        "fields": {
+            "username": "user3",
+            "email": "user3@user3.com",
+            "password": "pbkdf2_sha256$870000$VdqORim2cKP3n3sGpLxRjU$dnIH+C/KJ2sJOF0DbjUnbL+e+Pu8zHgwA3KBDf8B8OY=",
+            "role": "passenger",
+            "is_staff": false,
+            "is_superuser": false,
+            "is_active": true
+        }
+    }
+]

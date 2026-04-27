@@ -153,9 +153,9 @@ def crew_dashboard(request):
 
 # helper
 def recalculate_po_total(po):
-    total = po.items.aggregate(
-        total=Sum(F('quantity') * F('unit_price'))
-    )['total'] or 0
+    total = 0
+    for item in po.items.all():
+        total += item.quantity * item.unit_price
     po.total_amount = total
     po.save()
 
@@ -366,7 +366,7 @@ def aircraft_list(request):
 @role_required(['admin', 'flight_manager'])
 def aircraft_create(request):
     if request.method == 'POST':
-        form = AircraftForm(request.POST)
+        form = AircraftForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Aircraft added.')
@@ -380,7 +380,7 @@ def aircraft_create(request):
 def aircraft_edit(request, pk):
     aircraft = get_object_or_404(Aircraft, pk=pk)
     if request.method == 'POST':
-        form = AircraftForm(request.POST, instance=aircraft)
+        form = AircraftForm(request.POST, request.FILES, instance=aircraft)
         if form.is_valid():
             form.save()
             messages.success(request, 'Aircraft updated.')

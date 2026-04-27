@@ -1,0 +1,34 @@
+[
+    {
+        "model": "main.category",
+        "pk": 1,
+        "fields": {
+            "name": "Engine Parts",
+            "description": "Parts for aircraft engines"
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 2,
+        "fields": {
+            "name": "Cabin Supplies",
+            "description": "Stuff for the cabin like blankets and headphones"
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 3,
+        "fields": {
+            "name": "Safety Equipment",
+            "description": "Life vests, oxygen masks etc"
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 4,
+        "fields": {
+            "name": "Cleaning Supplies",
+            "description": "Cleaning products for aircraft"
+        }
+    }
+]

@@ -53,7 +53,7 @@ class PurchaseOrderItemForm(forms.ModelForm):
 class AircraftForm(forms.ModelForm):
     class Meta:
         model = Aircraft
-        fields = ['registration', 'aircraft_type', 'total_seats', 'status']
+        fields = ['registration', 'aircraft_type', 'total_seats', 'image', 'status']
 
     def clean_total_seats(self):
         total_seats = self.cleaned_data.get('total_seats')

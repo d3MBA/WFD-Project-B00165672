@@ -1,0 +1,41 @@
+[
+    {
+        "model": "main.purchaseorder",
+        "pk": 1,
+        "fields": {
+            "po_number": "PO-001",
+            "supplier": 1,
+            "created_by": 4,
+            "status": "draft",
+            "created_date": "2026-04-01T10:00:00Z",
+            "total_amount": "1500.00",
+            "notes": "Monthly engine parts order"
+        }
+    },
+    {
+        "model": "main.purchaseorder",
+        "pk": 2,
+        "fields": {
+            "po_number": "PO-002",
+            "supplier": 2,
+            "created_by": 4,
+            "status": "submitted",
+            "created_date": "2026-04-05T14:00:00Z",
+            "total_amount": "3200.00",
+            "notes": "Fuel for June"
+        }
+    },
+    {
+        "model": "main.purchaseorder",
+        "pk": 3,
+        "fields": {
+            "po_number": "PO-003",
+            "supplier": 3,
+            "created_by": 5,
+            "status": "approved",
+            "created_date": "2026-04-08T09:00:00Z",
+            "total_amount": "800.00",
+            "notes": "Cleaning stuff"
+        }
+    }
+]

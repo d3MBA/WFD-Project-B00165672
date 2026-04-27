@@ -1,0 +1,42 @@
+[
+    {
+        "model": "main.aircraft",
+        "pk": 1,
+        "fields": {
+            "registration": "EI-ABC",
+            "aircraft_type": "Boeing 737",
+            "total_seats": 200,
+            "status": "active"
+        }
+    },
+    {
+        "model": "main.aircraft",
+        "pk": 2,
+        "fields": {
+            "registration": "EI-DEF",
+            "aircraft_type": "Airbus A320",
+            "total_seats": 180,
+            "status": "active"
+        }
+    },
+    {
+        "model": "main.aircraft",
+        "pk": 3,
+        "fields": {
+            "registration": "EI-GHI",
+            "aircraft_type": "Boeing 777",
+            "total_seats": 350,
+            "status": "maintenance"
+        }
+    },
+    {
+        "model": "main.aircraft",
+        "pk": 4,
+        "fields": {
+            "registration": "EI-JKL",
+            "aircraft_type": "ATR 72",
+            "total_seats": 70,
+            "status": "retired"
+        }
+    }
+]
